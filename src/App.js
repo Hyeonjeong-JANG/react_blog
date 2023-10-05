@@ -1,7 +1,7 @@
 //
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 function App() {
     let post = '역삼 우동 맛집';
@@ -187,6 +187,7 @@ function App() {
                 // 조건식? 참일 때 실행할 코드:거짓일 때 실행할 코드
                 modal == true ? <Modal title={title} color={'green'} 글제목={글제목} 글제목변경={글제목변경} /> : null
             }
+            <Modal2></Modal2>
         </div>
     );
 }
@@ -222,4 +223,30 @@ function Modal(props) {
 
 //동적인 UI 만드는 순서
 //1. html css로 미리 디자인 완성, 2. UI의 현재 상태를 state로 저장, 3. state에 따라 UI가 어떻게 보일지 작성
+
+//class 문법은 변수와 함수를 보관할 수 있는 통이다. 이거 펑션이랑 똑같어.
+class Modal2 extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            name: 'Kim',
+            age: 20,
+        };
+    }
+    render() {
+        // return <div>안녕, {this.state.name}</div>;
+        return (
+            <>
+                <div>안녕, {this.state.age}</div>
+                <button
+                    onClick={() => {
+                        this.setState({ age: 21 });
+                    }}
+                >
+                    버튼
+                </button>
+            </>
+        );
+    }
+}
 export default App;
