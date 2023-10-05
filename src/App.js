@@ -9,7 +9,9 @@ function App() {
     let [따봉, 따봉변경] = useState([0, 0, 0]);
     let [modal, setModal] = useState(false);
     let [count, setCount] = useState(0);
-    [1, 2, 3].map(function (a) {
+    let [title, setTitle] = useState(0);
+    let [입력값, 입력값변경] = useState('');
+    [(1, 2, 3)].map(function (a) {
         return '132123';
         // console.log(a);
     });
@@ -67,19 +69,20 @@ function App() {
                 <p>2월 17일 발행</p>
             </div> */}
 
-            {
-                // 조건식? 참일 때 실행할 코드:거짓일 때 실행할 코드
-                modal == true ? <Modal /> : null
-            }
-
             {/* 반복문 방법1 */}
             {글제목.map(function (a, i) {
                 return (
-                    <div className="list" key={i}>
-                        <h4>
+                    <div className="list" key={i} style={{ position: 'relative' }}>
+                        <h4
+                            onClick={() => {
+                                setModal(true);
+                                setTitle(i);
+                            }}
+                        >
                             {글제목[i]}
                             <span
-                                onClick={() => {
+                                onClick={(e) => {
+                                    e.stopPropagation();
                                     let copy = [...따봉];
                                     copy[i] = copy[i] + 1;
                                     따봉변경(copy);
@@ -89,10 +92,87 @@ function App() {
                             </span>
                             {따봉[i]}
                         </h4>
+                        {/* <span
+                            onClick={() => {
+                                document.querySelectorAll('.list')[i].innerHTML = '';
+                            }}
+                            style={{
+                                position: 'absolute',
+                                top: '2px',
+                                right: '5px',
+                                border: '1px solid black',
+                                borderRadius: '2px',
+                                padding: '3px 4px 2px 4px',
+                            }}
+                        >
+                            삭제
+                        </span> */}
+                        <span
+                            onClick={() => {
+                                let copy = [...글제목];
+                                copy.splice(i, 1);
+                                글제목변경(copy);
+                            }}
+                            style={{
+                                position: 'absolute',
+                                top: '2px',
+                                right: '5px',
+                                border: '1px solid black',
+                                borderRadius: '2px',
+                                padding: '3px 4px 2px 4px',
+                            }}
+                        >
+                            삭제
+                        </span>
                         <p>2월 17일 발행</p>
                     </div>
                 );
             })}
+
+            <button
+                onClick={() => {
+                    setTitle(0);
+                }}
+            >
+                글제목0
+            </button>
+            <button
+                onClick={() => {
+                    setTitle(1);
+                }}
+            >
+                글제목1
+            </button>
+            <button
+                onClick={() => {
+                    setTitle(2);
+                }}
+            >
+                글제목2
+            </button>
+            <br />
+
+            <input
+                id="inputValue"
+                onChange={(e) => {
+                    입력값변경(e.target.value);
+                    console.log(입력값);
+                }}
+                type="text"
+                placeholder="제목을 입력하세요."
+            />
+            <button
+                onClick={() => {
+                    let copy = [...글제목];
+                    copy.unshift(입력값);
+                    글제목변경(copy);
+                }}
+            >
+                글발행
+            </button>
+            {/* <select name="" id=""></select> */}
+            {/* <textarea name="" id="" cols="30" rows="10"></textarea> */}
+
             {/* 반복문 방법2 */}
             {/* {글제목.map(function (a, i) {
                 return (
@@ -102,6 +182,11 @@ function App() {
                     </div>
                 );
             })} */}
+
+            {
+                // 조건식? 참일 때 실행할 코드:거짓일 때 실행할 코드
+                modal == true ? <Modal title={title} color={'green'} 글제목={글제목} 글제목변경={글제목변경} /> : null
+            }
         </div>
     );
 }
@@ -121,12 +206,16 @@ function App() {
 //     Modal=123
 // }
 
-function Modal() {
+//부모 -> 자식 state를 전송하려면 props 문법을 쓰면 된다.
+//1. <자식컴포넌트 작명={state이름}>, 2. props 파라미터 등록 후 props.작명 사용
+//* 부모가 자식에게로 보내거나 형제끼리 보낼 수 없어. 부모에서 자식에게로만 전송이 가능해.
+function Modal(props) {
     return (
-        <div className="modal">
-            <h4>제목</h4>
-            <p>날짜</p>
-            <p>상세내용</p>
+        <div className="modal" style={{ background: props.color }}>
+            <h4 id="title">{props.글제목[props.title]}</h4>
+            <p id="date">날짜</p>
+            <p id="text">상세 내용</p>
+            <button>글수정</button>
         </div>
     );
 }
